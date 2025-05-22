@@ -1,6 +1,6 @@
 import { type PantryShelf } from "@prisma/client";
 import {  useLoaderData } from "react-router";
-import { getAllShelves } from "app/models/pantry-shelf.server";
+import { getAllShelves } from "../../models/pantryshelf.server";
 
 type LoaderData = {
   shelves: PantryShelf[];
