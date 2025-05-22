@@ -3,64 +3,72 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
+  NavLink,
+  Meta,
+  Links,
+  Outlet
 } from "react-router";
 import type { Route } from "./+types/root";
+import { DiscoverIcon, HomeIcon, RecipeBookIcon, SettingsIcon } from "./components/icons/icon.component";
+import classNames from "classnames";
 
-import appStylesHref from "./app.css?url";
+
+import "./app.css";
 
 export default function App() {
   return (
-    <>
-      <div id="sidebar">
-        <h1>React Router Contacts</h1>
-        <div>
-          <Form id="search-form" role="search">
-            <input
-              aria-label="Search contacts"
-              id="q"
-              name="q"
-              placeholder="Search"
-              type="search"
-            />
-            <div aria-hidden hidden={true} id="search-spinner" />
-          </Form>
-          <Form method="post">
-            <button type="submit">New</button>
-          </Form>
-        </div>
-        <nav>
-          <ul>
-            <li>
-              <a href={`/contacts/1`}>Your Name</a>
-            </li>
-            <li>
-              <a href={`/contacts/2`}>Your Friend</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </>
-  );
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width" />
+          <Meta />
+          <Links />
+        </head>
+        <body className='md:flex md:h-screen'>
+          <nav className="bg-primary text-white">
+            <ul className="flex md:flex-col">
+              <AppNavLink to="/"><HomeIcon /></AppNavLink>
+              <AppNavLink to="/discover"><DiscoverIcon /></AppNavLink>
+              <AppNavLink to="/app"><RecipeBookIcon /></AppNavLink>
+              <AppNavLink to="/settings"><SettingsIcon /></AppNavLink>
+            </ul>
+          </nav>
+            <div className='p-4'>
+              <Outlet />
+            </div>
+            <ScrollRestoration />
+            <Scripts />
+        </body>
+        
+      </html>
+    );
 }
 
-// The Layout component is a special export for the root route.
-// It acts as your document's "app shell" for all route components, HydrateFallback, and ErrorBoundary
-// For more information, see https://reactrouter.com/explanation/special-files#layout-export
-export function Layout({ children }: { children: React.ReactNode }) {
+
+type AppNavLinkProps = {
+  children: React.ReactNode;
+  to: string
+};
+
+function AppNavLink ({children, to}: AppNavLinkProps) {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href={appStylesHref} />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
+    <li className='w-16'>
+      <NavLink to={to} >
+        {({isActive}) => {
+          return (
+            <div className = {classNames('py-4 flex justify-center hover:bg-primary-light',
+              {
+                "bg-primary-light": isActive
+              }
+          )}
+          >
+              {children}
+            </div>
+          ); 
+        }}
+      </NavLink>
+    </li>
+  )
 }
 
 // The top most error boundary for the app, rendered when your app throws an error
